@@ -6,10 +6,11 @@ struct SettingsView: View {
     @State private var dob: Date = UserData.shared.dateOfBirth
     @State private var lifeExpectancy: Double = Double(UserData.shared.lifeExpectancy)
     @State private var apiKey: String = UserData.shared.anthropicAPIKey
+    @State private var selectedPaletteID: String = UserData.shared.colorPaletteID
     @State private var focusedSection: SettingsSection = .dob
     @State private var saved = false
 
-    enum SettingsSection { case dob, lifeExpectancy, apiKey }
+    enum SettingsSection { case dob, lifeExpectancy, apiKey, palette }
 
     var body: some View {
         ZStack {
@@ -73,6 +74,49 @@ struct SettingsView: View {
                             .background(Theme.border)
                             .padding(.vertical, 32)
 
+                        // Section: Color Palette
+                        settingSection(
+                            label: "color palette",
+                            isActive: focusedSection == .palette
+                        ) {
+                            HStack(spacing: 20) {
+                                ForEach(ColorPalette.all) { palette in
+                                    Button {
+                                        withAnimation(.easeInOut(duration: 0.15)) {
+                                            selectedPaletteID = palette.id
+                                            focusedSection = .palette
+                                        }
+                                    } label: {
+                                        VStack(spacing: 8) {
+                                            ZStack {
+                                                Circle()
+                                                    .fill(palette.accent)
+                                                    .frame(width: 26, height: 26)
+                                                if selectedPaletteID == palette.id {
+                                                    Circle()
+                                                        .stroke(Theme.ink, lineWidth: 1.5)
+                                                        .frame(width: 34, height: 34)
+                                                }
+                                            }
+                                            .frame(width: 38, height: 38)
+
+                                            Text(palette.name)
+                                                .font(Theme.fontLabel)
+                                                .foregroundColor(
+                                                    selectedPaletteID == palette.id ? Theme.ink : Theme.muted
+                                                )
+                                        }
+                                    }
+                                }
+                            }
+                            .padding(.horizontal, 28)
+                        }
+                        .onTapGesture { withAnimation { focusedSection = .palette } }
+
+                        Divider()
+                            .background(Theme.border)
+                            .padding(.vertical, 32)
+
                         // Section: Anthropic API Key
                         settingSection(
                             label: "anthropic api key",
@@ -100,6 +144,7 @@ struct SettingsView: View {
                     userData.dateOfBirth = dob
                     userData.lifeExpectancy = Int(lifeExpectancy)
                     userData.anthropicAPIKey = apiKey.trimmingCharacters(in: .whitespaces)
+                    userData.colorPaletteID = selectedPaletteID
                     userData.save()
                     withAnimation(.easeInOut(duration: 0.15)) { saved = true }
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) { dismiss() }

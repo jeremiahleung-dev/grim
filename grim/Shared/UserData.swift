@@ -21,6 +21,11 @@ class UserData: ObservableObject {
     @Published var anthropicAPIKey: String
     @Published var dailyPromptText: String?
     @Published var dailyPromptDate: Date?
+    @Published var colorPaletteID: String
+
+    var selectedPalette: ColorPalette {
+        ColorPalette.all.first { $0.id == colorPaletteID } ?? .ember
+    }
 
     private init() {
         let defaultDOB: Date = {
@@ -44,6 +49,7 @@ class UserData: ObservableObject {
         self.anthropicAPIKey = defaults.string(forKey: "anthropicAPIKey") ?? ""
         self.dailyPromptText = defaults.string(forKey: "dailyPromptText")
         self.dailyPromptDate = defaults.object(forKey: "dailyPromptDate") as? Date
+        self.colorPaletteID = defaults.string(forKey: "colorPaletteID") ?? "ember"
     }
 
     func save() {
@@ -53,6 +59,7 @@ class UserData: ObservableObject {
         defaults.set(anthropicAPIKey, forKey: "anthropicAPIKey")
         defaults.set(dailyPromptText, forKey: "dailyPromptText")
         defaults.set(dailyPromptDate, forKey: "dailyPromptDate")
+        defaults.set(colorPaletteID, forKey: "colorPaletteID")
         if let data = try? JSONEncoder().encode(lifeItems) {
             defaults.set(data, forKey: "lifeItems")
         }
