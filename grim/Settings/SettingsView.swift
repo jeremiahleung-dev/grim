@@ -5,11 +5,10 @@ struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var dob: Date = UserData.shared.dateOfBirth
     @State private var lifeExpectancy: Double = Double(UserData.shared.lifeExpectancy)
-    @State private var apiKey: String = UserData.shared.anthropicAPIKey
     @State private var focusedSection: SettingsSection = .dob
     @State private var saved = false
 
-    enum SettingsSection { case dob, lifeExpectancy, apiKey }
+    enum SettingsSection { case dob, lifeExpectancy }
 
     var body: some View {
         ZStack {
@@ -69,25 +68,6 @@ struct SettingsView: View {
                         .onTapGesture { withAnimation { focusedSection = .lifeExpectancy } }
                         .padding(.horizontal, 28)
 
-                        Divider()
-                            .background(Theme.border)
-                            .padding(.vertical, 32)
-
-                        // Section: Anthropic API Key
-                        settingSection(
-                            label: "anthropic api key",
-                            isActive: focusedSection == .apiKey
-                        ) {
-                            TextField("sk-ant-...", text: $apiKey)
-                                .font(Theme.fontLabel)
-                                .foregroundColor(Theme.ink)
-                                .tint(Theme.accent)
-                                .autocorrectionDisabled()
-                                .textInputAutocapitalization(.never)
-                                .padding(.horizontal, 28)
-                                .onTapGesture { withAnimation { focusedSection = .apiKey } }
-                        }
-                        .onTapGesture { withAnimation { focusedSection = .apiKey } }
                     }
                 }
 
@@ -99,7 +79,6 @@ struct SettingsView: View {
                     haptic.notificationOccurred(.success)
                     userData.dateOfBirth = dob
                     userData.lifeExpectancy = Int(lifeExpectancy)
-                    userData.anthropicAPIKey = apiKey.trimmingCharacters(in: .whitespaces)
                     userData.save()
                     withAnimation(.easeInOut(duration: 0.15)) { saved = true }
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) { dismiss() }

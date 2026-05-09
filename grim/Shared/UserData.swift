@@ -18,7 +18,6 @@ class UserData: ObservableObject {
     @Published var lifeExpectancy: Int
     @Published var displayUnit: DisplayUnit
     @Published var lifeItems: [LifeItem]
-    @Published var anthropicAPIKey: String
     @Published var dailyPromptText: String?
     @Published var dailyPromptDate: Date?
 
@@ -41,7 +40,6 @@ class UserData: ObservableObject {
         self.lifeExpectancy = storedLE > 0 ? storedLE : 100
         self.displayUnit = storedUnit
         self.lifeItems = storedItems
-        self.anthropicAPIKey = defaults.string(forKey: "anthropicAPIKey") ?? ""
         self.dailyPromptText = defaults.string(forKey: "dailyPromptText")
         self.dailyPromptDate = defaults.object(forKey: "dailyPromptDate") as? Date
     }
@@ -50,7 +48,6 @@ class UserData: ObservableObject {
         defaults.set(dateOfBirth, forKey: "dob")
         defaults.set(lifeExpectancy, forKey: "lifeExpectancy")
         defaults.set(displayUnit.rawValue, forKey: "displayUnit")
-        defaults.set(anthropicAPIKey, forKey: "anthropicAPIKey")
         defaults.set(dailyPromptText, forKey: "dailyPromptText")
         defaults.set(dailyPromptDate, forKey: "dailyPromptDate")
         if let data = try? JSONEncoder().encode(lifeItems) {

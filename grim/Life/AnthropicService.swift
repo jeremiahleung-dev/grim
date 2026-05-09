@@ -6,13 +6,13 @@ struct AnthropicService {
         items: [LifeItem],
         dob: Date,
         lifeExpectancy: Int,
-        apiKey: String,
         completion: @escaping (String?) -> Void
     ) {
-        guard !apiKey.isEmpty, !items.isEmpty else {
+        guard !items.isEmpty else {
             completion(nil)
             return
         }
+        let apiKey = Secrets.anthropicAPIKey
 
         let url = URL(string: "https://api.anthropic.com/v1/messages")!
         var request = URLRequest(url: url)

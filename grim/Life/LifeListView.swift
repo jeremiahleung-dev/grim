@@ -138,11 +138,6 @@ struct LifeListView: View {
                         .foregroundColor(Theme.muted.opacity(0.5))
                 }
                 .padding(.top, 2)
-            } else if userData.anthropicAPIKey.isEmpty {
-                Text("add your anthropic api key in settings to get daily suggestions.")
-                    .font(Theme.fontLabel)
-                    .foregroundColor(Theme.muted)
-                    .lineSpacing(5)
             } else {
                 Text("no suggestion yet — add items to your list.")
                     .font(Theme.fontLabel)
@@ -167,8 +162,7 @@ struct LifeListView: View {
     }
 
     private func refreshPromptIfNeeded() {
-        guard !userData.anthropicAPIKey.isEmpty,
-              !userData.lifeItems.isEmpty else { return }
+        guard !userData.lifeItems.isEmpty else { return }
 
         let today = Calendar.current.startOfDay(for: Date())
         if let cached = userData.dailyPromptDate,
@@ -180,14 +174,12 @@ struct LifeListView: View {
     }
 
     private func regeneratePrompt() {
-        guard !userData.anthropicAPIKey.isEmpty,
-              !userData.lifeItems.isEmpty else { return }
+        guard !userData.lifeItems.isEmpty else { return }
         isGenerating = true
         AnthropicService.generateDailyPrompt(
             items: userData.lifeItems,
             dob: userData.dateOfBirth,
-            lifeExpectancy: userData.lifeExpectancy,
-            apiKey: userData.anthropicAPIKey
+            lifeExpectancy: userData.lifeExpectancy
         ) { result in
             isGenerating = false
             if let result {

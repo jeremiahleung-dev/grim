@@ -1,0 +1,5 @@
+grim/Shared/Secrets.swift
+.DS_Store
+*.xcuserstate
+xcuserdata/
+DerivedData/
