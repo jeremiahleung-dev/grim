@@ -14,21 +14,35 @@ struct MediumWidgetView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            HStack(alignment: .center) {
-                VStack(alignment: .leading, spacing: 4) {
+
+            ZStack(alignment: .topTrailing) {
+
+                // Number fills full width — fades on the right so stats remain legible
+                VStack(alignment: .leading, spacing: 2) {
                     Text(entry.daysRemaining.formatted())
-                        .font(.system(size: 100, weight: .bold, design: .monospaced))
+                        .font(.system(size: 300, weight: .bold, design: .monospaced))
                         .foregroundColor(Color(hex: "#f0ece0"))
-                        .minimumScaleFactor(0.3)
+                        .minimumScaleFactor(0.1)
                         .lineLimit(1)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .mask(
+                            LinearGradient(
+                                stops: [
+                                    .init(color: .black, location: 0),
+                                    .init(color: .black, location: 0.5),
+                                    .init(color: .clear,  location: 0.72)
+                                ],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                        )
 
                     Text("days remaining")
                         .font(.system(size: 9, weight: .regular, design: .monospaced))
                         .foregroundColor(Color(hex: "#555555"))
                 }
 
-                Spacer()
-
+                // Stats overlaid top-right
                 VStack(alignment: .trailing, spacing: 8) {
                     statItem(value: entry.weeksRemaining.formatted(), label: "weeks")
                     statItem(value: String(format: "%.1f", entry.yearsRemaining), label: "years")
@@ -40,14 +54,11 @@ struct MediumWidgetView: View {
                 }
             }
 
-            // Health bar
+            // HP bar
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
-                    Rectangle()
-                        .fill(Color(hex: "#1a1a1a"))
-                    Rectangle()
-                        .fill(hpColor)
-                        .frame(width: geo.size.width * hpRemaining)
+                    Rectangle().fill(Color(hex: "#1a1a1a"))
+                    Rectangle().fill(hpColor).frame(width: geo.size.width * hpRemaining)
                 }
                 .cornerRadius(1)
             }
