@@ -15,8 +15,8 @@ struct MediumWidgetView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
 
-            HStack(alignment: .bottom) {
-                VStack(alignment: .leading, spacing: 2) {
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 7) {
                     Text(entry.daysRemaining.formatted())
                         .font(.system(size: 102, weight: .bold, design: .monospaced))
                         .foregroundColor(Color(hex: "#f0ece0"))
