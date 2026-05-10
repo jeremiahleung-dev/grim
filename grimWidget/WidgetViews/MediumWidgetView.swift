@@ -18,7 +18,7 @@ struct MediumWidgetView: View {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 7) {
                     Text(entry.daysRemaining.formatted())
-                        .font(.custom("AmericanTypewriter", size: 102))
+                        .font(.system(size: 102, weight: .medium, design: .monospaced))
                         .foregroundColor(Color(hex: "#f0ece0"))
                         .minimumScaleFactor(0.5)
                         .lineLimit(1)
