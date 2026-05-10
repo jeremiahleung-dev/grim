@@ -21,6 +21,8 @@ class UserData: ObservableObject {
     @Published var dailyPromptText: String?
     @Published var dailyPromptDate: Date?
     @Published var weekTasks: [String: [DayTask]]
+    @Published var contextBriefing: String?
+    @Published var contextDate: Date?
 
     private init() {
         let defaultDOB: Date = {
@@ -48,6 +50,8 @@ class UserData: ObservableObject {
         self.dailyPromptText = defaults.string(forKey: "dailyPromptText")
         self.dailyPromptDate = defaults.object(forKey: "dailyPromptDate") as? Date
         self.weekTasks = storedWeekTasks
+        self.contextBriefing = defaults.string(forKey: "contextBriefing")
+        self.contextDate = defaults.object(forKey: "contextDate") as? Date
     }
 
     func save() {
@@ -56,6 +60,8 @@ class UserData: ObservableObject {
         defaults.set(displayUnit.rawValue, forKey: "displayUnit")
         defaults.set(dailyPromptText, forKey: "dailyPromptText")
         defaults.set(dailyPromptDate, forKey: "dailyPromptDate")
+        defaults.set(contextBriefing, forKey: "contextBriefing")
+        defaults.set(contextDate, forKey: "contextDate")
         if let data = try? JSONEncoder().encode(lifeItems) {
             defaults.set(data, forKey: "lifeItems")
         }

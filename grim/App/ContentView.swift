@@ -87,9 +87,13 @@ struct ContentView: View {
                 Spacer()
             }
 
-            // Bottom chrome — daily prompt + swipe hint
+            // Bottom chrome — context card + daily prompt + swipe hint
             VStack(spacing: 0) {
                 Spacer()
+
+                ContextCardView()
+                    .padding(.horizontal, 28)
+                    .padding(.bottom, 12)
 
                 if !userData.lifeItems.isEmpty || !userData.dailyPromptText.isNilOrEmpty {
                     dailyPromptHint
