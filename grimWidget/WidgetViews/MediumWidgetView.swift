@@ -22,20 +22,21 @@ struct MediumWidgetView: View {
                         .foregroundColor(Color(hex: "#f0ece0"))
                         .minimumScaleFactor(0.5)
                         .lineLimit(1)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     Text("days remaining")
                         .font(.system(size: 9, weight: .regular, design: .monospaced))
                         .foregroundColor(Color(hex: "#555555"))
 
-                    // HP bar — sits right under label
-                    ZStack(alignment: .leading) {
-                        Rectangle()
-                            .fill(Color(hex: "#1a1a1a"))
-                            .frame(width: 80, height: 8)
-                        Rectangle()
-                            .fill(hpColor)
-                            .frame(width: 80 * hpRemaining, height: 8)
+                    // HP bar — matches the number's column width
+                    GeometryReader { geo in
+                        ZStack(alignment: .leading) {
+                            Rectangle().fill(Color(hex: "#1a1a1a"))
+                            Rectangle().fill(hpColor)
+                                .frame(width: geo.size.width * hpRemaining)
+                        }
+                        .cornerRadius(2)
                     }
-                    .cornerRadius(2)
+                    .frame(maxWidth: .infinity, height: 8)
                 }
                 Spacer()
                 VStack(alignment: .trailing, spacing: 8) {
