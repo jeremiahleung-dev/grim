@@ -36,7 +36,7 @@ struct MediumWidgetView: View {
                         }
                         .cornerRadius(2)
                     }
-                    .frame(maxWidth: .infinity, height: 8)
+                    .frame(height: 8)
                 }
                 Spacer()
                 VStack(alignment: .trailing, spacing: 8) {
