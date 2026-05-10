@@ -37,9 +37,13 @@ struct WeekStripView: View {
         let hasTasks = !userData.tasksForDate(date).isEmpty
         let color: Color = isToday ? Theme.accent : (isPast ? Theme.ink.opacity(0.25) : Theme.ink)
 
-        VStack(spacing: 6) {
+        VStack(spacing: 4) {
+            Text("\(calendar.component(.day, from: date))")
+                .font(.system(size: 11, weight: .regular, design: .monospaced))
+                .foregroundColor(color)
+
             Text(dayLetter(date))
-                .font(Theme.fontLabel)
+                .font(.system(size: 11, weight: isToday ? .medium : .regular, design: .monospaced))
                 .foregroundColor(color)
 
             Circle()
