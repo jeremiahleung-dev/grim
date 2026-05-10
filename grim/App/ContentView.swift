@@ -6,6 +6,7 @@ struct ContentView: View {
     @State private var showSettings = false
     @State private var showLifeList = false
     @State private var appeared = false
+    @State private var dragOffset: CGFloat = 0
 
     private let units = DisplayUnit.allCases
 
@@ -61,13 +62,24 @@ struct ContentView: View {
                 .padding(.horizontal, 28)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .contentShape(Rectangle())
+                .offset(x: dragOffset)
                 .gesture(
-                    DragGesture(minimumDistance: 30, coordinateSpace: .local)
-                        .onEnded { value in
+                    DragGesture(minimumDistance: 10, coordinateSpace: .local)
+                        .onChanged { value in
                             let h = value.translation.width
                             let v = value.translation.height
                             if abs(h) > abs(v) {
+                                dragOffset = h * 0.25
+                            }
+                        }
+                        .onEnded { value in
+                            let h = value.translation.width
+                            let v = value.translation.height
+                            if abs(h) > abs(v) && abs(h) > 30 {
                                 handleHorizontalSwipe(h)
+                            }
+                            withAnimation(.spring(response: 0.3, dampingFraction: 0.85)) {
+                                dragOffset = 0
                             }
                         }
                 )
