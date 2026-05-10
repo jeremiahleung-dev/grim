@@ -25,6 +25,17 @@ struct MediumWidgetView: View {
                     Text("days remaining")
                         .font(.system(size: 9, weight: .regular, design: .monospaced))
                         .foregroundColor(Color(hex: "#555555"))
+
+                    // HP bar — sits right under label
+                    ZStack(alignment: .leading) {
+                        Rectangle()
+                            .fill(Color(hex: "#1a1a1a"))
+                            .frame(width: 80, height: 8)
+                        Rectangle()
+                            .fill(hpColor)
+                            .frame(width: 80 * hpRemaining, height: 8)
+                    }
+                    .cornerRadius(2)
                 }
                 Spacer()
                 VStack(alignment: .trailing, spacing: 8) {
@@ -37,18 +48,6 @@ struct MediumWidgetView: View {
                     )
                 }
             }
-
-            Spacer()
-
-            // HP bar
-            GeometryReader { geo in
-                ZStack(alignment: .leading) {
-                    Rectangle().fill(Color(hex: "#1a1a1a"))
-                    Rectangle().fill(hpColor).frame(width: geo.size.width * hpRemaining)
-                }
-                .cornerRadius(1)
-            }
-            .frame(height: 5)
         }
         .padding(18)
     }
