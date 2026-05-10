@@ -15,8 +15,58 @@ struct ContentView: View {
         ZStack {
             Theme.background.ignoresSafeArea()
 
-            VStack(alignment: .leading, spacing: 0) {
-                // Header
+            // Countdown — truly centered on screen
+            VStack(alignment: .leading, spacing: 10) {
+                Text(formattedCount)
+                    .font(Theme.fontHero)
+                    .foregroundColor(Theme.ink)
+                    .minimumScaleFactor(0.4)
+                    .lineLimit(1)
+                    .contentTransition(.numericText())
+
+                Text(unitLabel)
+                    .font(Theme.fontLabel)
+                    .foregroundColor(Theme.muted)
+
+                Text(todayLabel)
+                    .font(Theme.fontLabel)
+                    .foregroundColor(Theme.muted.opacity(0.45))
+
+                HStack(spacing: 6) {
+                    ForEach(units, id: \.self) { unit in
+                        Circle()
+                            .fill(unit == displayUnit ? Theme.muted : Theme.muted.opacity(0.25))
+                            .frame(width: 4, height: 4)
+                            .animation(.easeInOut(duration: 0.2), value: displayUnit)
+                    }
+                }
+                .padding(.top, 4)
+            }
+            .padding(.horizontal, 28)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .contentShape(Rectangle())
+            .offset(x: dragOffset)
+            .gesture(
+                DragGesture(minimumDistance: 10, coordinateSpace: .local)
+                    .onChanged { value in
+                        let h = value.translation.width
+                        let v = value.translation.height
+                        if abs(h) > abs(v) { dragOffset = h * 0.25 }
+                    }
+                    .onEnded { value in
+                        let h = value.translation.width
+                        let v = value.translation.height
+                        if abs(h) > abs(v) && abs(h) > 30 { handleHorizontalSwipe(h) }
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.85)) { dragOffset = 0 }
+                    }
+            )
+            .opacity(appeared ? 1 : 0)
+            .onAppear {
+                withAnimation(.easeIn(duration: 0.6)) { appeared = true }
+            }
+
+            // Top chrome — header + week strip
+            VStack(spacing: 0) {
                 HStack {
                     Text("grim")
                         .font(Theme.fontLabel)
@@ -35,73 +85,18 @@ struct ContentView: View {
                     .padding(.top, 20)
 
                 Spacer()
+            }
 
-                // Main countdown — swipe L/R for units
-                VStack(alignment: .leading, spacing: 10) {
-                    Text(formattedCount)
-                        .font(Theme.fontHero)
-                        .foregroundColor(Theme.ink)
-                        .minimumScaleFactor(0.4)
-                        .lineLimit(1)
-                        .contentTransition(.numericText())
-
-                    Text(unitLabel)
-                        .font(Theme.fontLabel)
-                        .foregroundColor(Theme.muted)
-
-                    Text(todayLabel)
-                        .font(Theme.fontLabel)
-                        .foregroundColor(Theme.muted.opacity(0.45))
-
-                    HStack(spacing: 6) {
-                        ForEach(units, id: \.self) { unit in
-                            Circle()
-                                .fill(unit == displayUnit ? Theme.muted : Theme.muted.opacity(0.25))
-                                .frame(width: 4, height: 4)
-                                .animation(.easeInOut(duration: 0.2), value: displayUnit)
-                        }
-                    }
-                    .padding(.top, 4)
-                }
-                .padding(.horizontal, 28)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .contentShape(Rectangle())
-                .offset(x: dragOffset)
-                .gesture(
-                    DragGesture(minimumDistance: 10, coordinateSpace: .local)
-                        .onChanged { value in
-                            let h = value.translation.width
-                            let v = value.translation.height
-                            if abs(h) > abs(v) {
-                                dragOffset = h * 0.25
-                            }
-                        }
-                        .onEnded { value in
-                            let h = value.translation.width
-                            let v = value.translation.height
-                            if abs(h) > abs(v) && abs(h) > 30 {
-                                handleHorizontalSwipe(h)
-                            }
-                            withAnimation(.spring(response: 0.3, dampingFraction: 0.85)) {
-                                dragOffset = 0
-                            }
-                        }
-                )
-                .opacity(appeared ? 1 : 0)
-                .onAppear {
-                    withAnimation(.easeIn(duration: 0.6)) { appeared = true }
-                }
-
+            // Bottom chrome — daily prompt + swipe hint
+            VStack(spacing: 0) {
                 Spacer()
 
-                // Daily prompt hint / card
                 if !userData.lifeItems.isEmpty || !userData.dailyPromptText.isNilOrEmpty {
                     dailyPromptHint
                         .padding(.horizontal, 28)
                         .padding(.bottom, 24)
                 }
 
-                // Swipe up hint
                 Button { showLifeList = true } label: {
                     HStack(spacing: 6) {
                         Image(systemName: "chevron.up")
@@ -120,9 +115,7 @@ struct ContentView: View {
                 .onEnded { value in
                     let h = value.translation.width
                     let v = value.translation.height
-                    if abs(v) > abs(h) && v < -50 {
-                        showLifeList = true
-                    }
+                    if abs(v) > abs(h) && v < -50 { showLifeList = true }
                 }
         )
         .sheet(isPresented: $showSettings) { SettingsView() }
