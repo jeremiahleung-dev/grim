@@ -38,12 +38,22 @@ struct GrimProvider: TimelineProvider {
             percentLived: DateCalculator.percentLived(dob: dob, lifeExpectancy: le),
             weeksLived: DateCalculator.weeksLived(from: dob),
             lifeExpectancy: le,
-            dob: dob
+            dob: dob,
+            widgetDisplayUnit: defaults.string(forKey: "widgetDisplayUnit") ?? "days",
+            contextBriefing: defaults.string(forKey: "contextBriefing"),
+            currentStreak: max(0, defaults.integer(forKey: "currentStreak"))
         )
     }
 }
 
 @main
+struct GrimWidgetBundle: WidgetBundle {
+    var body: some Widget {
+        GrimWidget()
+        GrimLiveActivity()
+    }
+}
+
 struct GrimWidget: Widget {
     let kind: String = "GrimWidget"
 

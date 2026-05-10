@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AA0000022FAEDD3F005FCFE5 /* ActivityKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA0000012FAEDD3F005FCFE5 /* ActivityKit.framework */; };
+		AA0000032FAEDD3F005FCFE5 /* ActivityKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA0000012FAEDD3F005FCFE5 /* ActivityKit.framework */; };
 		BB00000B2FAEDD3F005FCFE5 /* grimWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = BB0000012FAEDD3F005FCFE5 /* grimWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
@@ -49,15 +51,29 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		AA0000012FAEDD3F005FCFE5 /* ActivityKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ActivityKit.framework; path = System/Library/Frameworks/ActivityKit.framework; sourceTree = SDKROOT; };
 		1AC3A17E2FAEDD3E005FCFE5 /* grim.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = grim.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AC3A18D2FAEDD3F005FCFE5 /* grimTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = grimTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AC3A1972FAEDD3F005FCFE5 /* grimUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = grimUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB0000012FAEDD3F005FCFE5 /* grimWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = grimWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		1AC3A3832FB06F46005FCFE5 /* Exceptions for "grim" folder in "grim" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 1AC3A17D2FAEDD3E005FCFE5 /* grim */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		1AC3A1802FAEDD3E005FCFE5 /* grim */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				1AC3A3832FB06F46005FCFE5 /* Exceptions for "grim" folder in "grim" target */,
+			);
 			path = grim;
 			sourceTree = "<group>";
 		};
@@ -83,6 +99,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA0000022FAEDD3F005FCFE5 /* ActivityKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -104,6 +121,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA0000032FAEDD3F005FCFE5 /* ActivityKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -118,6 +136,7 @@
 				1AC3A19A2FAEDD3F005FCFE5 /* grimUITests */,
 				BB0000022FAEDD3F005FCFE5 /* grimWidget */,
 				1AC3A17F2FAEDD3E005FCFE5 /* Products */,
+				AA0000012FAEDD3F005FCFE5 /* ActivityKit.framework */,
 			);
 			sourceTree = "<group>";
 		};
@@ -480,23 +499,30 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = grim/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "grim reads your calendar so Claude can help you make the most of what's coming up.";
+				INFOPLIST_KEY_NSCalendarsUsageDescription = "grim reads your calendar so Claude can help you make the most of what's coming up.";
+				INFOPLIST_KEY_NSContactsUsageDescription = "grim reads your contacts to remind you of birthdays and people worth reaching out to.";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "grim reads your sleep and activity to help you be more present each day.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "grim uses your location to show today's weather and help you plan your day.";
+				INFOPLIST_KEY_NSRemindersFullAccessUsageDescription = "grim reads your reminders so you never lose sight of what matters.";
+				INFOPLIST_KEY_NSRemindersUsageDescription = "grim reads your reminders so you never lose sight of what matters.";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "grim reads your sleep and activity to help you be more present each day.";
-				INFOPLIST_KEY_NSCalendarsUsageDescription = "grim reads your calendar so Claude can help you make the most of what's coming up.";
-				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "grim reads your calendar so Claude can help you make the most of what's coming up.";
-				INFOPLIST_KEY_NSRemindersUsageDescription = "grim reads your reminders so you never lose sight of what matters.";
-				INFOPLIST_KEY_NSRemindersFullAccessUsageDescription = "grim reads your reminders so you never lose sight of what matters.";
-				INFOPLIST_KEY_NSContactsUsageDescription = "grim reads your contacts to remind you of birthdays and people worth reaching out to.";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "grim uses your location to show today's weather and help you plan your day.";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 15.7;
@@ -522,23 +548,30 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = grim/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "grim reads your calendar so Claude can help you make the most of what's coming up.";
+				INFOPLIST_KEY_NSCalendarsUsageDescription = "grim reads your calendar so Claude can help you make the most of what's coming up.";
+				INFOPLIST_KEY_NSContactsUsageDescription = "grim reads your contacts to remind you of birthdays and people worth reaching out to.";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "grim reads your sleep and activity to help you be more present each day.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "grim uses your location to show today's weather and help you plan your day.";
+				INFOPLIST_KEY_NSRemindersFullAccessUsageDescription = "grim reads your reminders so you never lose sight of what matters.";
+				INFOPLIST_KEY_NSRemindersUsageDescription = "grim reads your reminders so you never lose sight of what matters.";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "grim reads your sleep and activity to help you be more present each day.";
-				INFOPLIST_KEY_NSCalendarsUsageDescription = "grim reads your calendar so Claude can help you make the most of what's coming up.";
-				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "grim reads your calendar so Claude can help you make the most of what's coming up.";
-				INFOPLIST_KEY_NSRemindersUsageDescription = "grim reads your reminders so you never lose sight of what matters.";
-				INFOPLIST_KEY_NSRemindersFullAccessUsageDescription = "grim reads your reminders so you never lose sight of what matters.";
-				INFOPLIST_KEY_NSContactsUsageDescription = "grim reads your contacts to remind you of birthdays and people worth reaching out to.";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "grim uses your location to show today's weather and help you plan your day.";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 15.7;

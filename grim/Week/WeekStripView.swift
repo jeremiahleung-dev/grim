@@ -14,12 +14,20 @@ struct WeekStripView: View {
     }
 
     var body: some View {
-        HStack(spacing: 0) {
-            ForEach(weekDays, id: \.self) { day in
-                Button { onSelectDay(day) } label: {
-                    dayCell(day)
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 0) {
+                ForEach(weekDays, id: \.self) { day in
+                    Button { onSelectDay(day) } label: {
+                        dayCell(day)
+                    }
+                    .frame(maxWidth: .infinity)
                 }
-                .frame(maxWidth: .infinity)
+            }
+
+            if userData.currentStreak >= 2 {
+                Text("\(userData.currentStreak) day streak")
+                    .font(.system(size: 10, weight: .regular, design: .monospaced))
+                    .foregroundColor(Theme.muted.opacity(0.4))
             }
         }
         .padding(.horizontal, 28)

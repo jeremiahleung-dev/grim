@@ -5,7 +5,7 @@ struct ContextCardView: View {
     @State private var isRefreshing = false
 
     var body: some View {
-        Button { refresh(force: true) } label: {
+        Button { refresh() } label: {
             VStack(alignment: .leading, spacing: 6) {
                 Text("right now")
                     .font(Theme.fontLabel)
@@ -14,7 +14,7 @@ struct ContextCardView: View {
                 if isRefreshing {
                     HStack(spacing: 8) {
                         ProgressView().tint(Theme.muted).scaleEffect(0.7)
-                        Text("reading your world...")
+                        Text("thinking...")
                             .font(Theme.fontLabel)
                             .foregroundColor(Theme.muted)
                     }
@@ -38,15 +38,15 @@ struct ContextCardView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(18)
-            .overlay(Rectangle().stroke(Theme.border, lineWidth: 1))
+            .offset(y: -10)
         }
-        .onAppear { refresh(force: false) }
+        .onAppear { refresh() }
     }
 
-    private func refresh(force: Bool) {
+    private func refresh() {
         guard !isRefreshing else { return }
         isRefreshing = true
-        ContextManager.shared.refresh(userData: userData, force: force) {
+        AgentOrchestrator.shared.run(userData: userData) {
             isRefreshing = false
         }
     }

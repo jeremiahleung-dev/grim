@@ -38,4 +38,9 @@ struct DateCalculator {
         let lived = totalDays - Double(daysRemaining(dob: dob, lifeExpectancy: lifeExpectancy))
         return min(1.0, max(0.0, lived / totalDays))
     }
+
+    static func daysLived(dob: Date) -> Int {
+        let days = Calendar.current.dateComponents([.day], from: dob, to: Date()).day ?? 0
+        return max(0, days)
+    }
 }

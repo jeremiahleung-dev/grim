@@ -8,6 +8,7 @@ struct ContentView: View {
     @State private var appeared = false
     @State private var dragOffset: CGFloat = 0
     @State private var selectedDay: Date?
+    @State private var showDaysLived = false
 
     private let units = DisplayUnit.allCases
 
@@ -23,6 +24,9 @@ struct ContentView: View {
                     .minimumScaleFactor(0.4)
                     .lineLimit(1)
                     .contentTransition(.numericText())
+                    .onTapGesture {
+                        withAnimation(.easeInOut(duration: 0.2)) { showDaysLived.toggle() }
+                    }
 
                 Text(unitLabel)
                     .font(Theme.fontLabel)
@@ -45,7 +49,7 @@ struct ContentView: View {
             .padding(.horizontal, 28)
             .frame(maxWidth: .infinity, alignment: .leading)
             .contentShape(Rectangle())
-            .offset(x: dragOffset)
+            .offset(x: dragOffset, y: -60)
             .gesture(
                 DragGesture(minimumDistance: 10, coordinateSpace: .local)
                     .onChanged { value in
@@ -94,6 +98,7 @@ struct ContentView: View {
                 ContextCardView()
                     .padding(.horizontal, 28)
                     .padding(.bottom, 12)
+                    .offset(y: -100)
 
                 if !userData.lifeItems.isEmpty || !userData.dailyPromptText.isNilOrEmpty {
                     dailyPromptHint
@@ -167,16 +172,20 @@ struct ContentView: View {
         let haptic = UIImpactFeedbackGenerator(style: .light)
         haptic.impactOccurred()
         withAnimation(.easeInOut(duration: 0.2)) {
-            if dx < 0, current < units.count - 1 {
-                displayUnit = units[current + 1]
+            if dx < 0 {
+                displayUnit = units[(current + 1) % units.count]
             } else if dx > 0, current > 0 {
                 displayUnit = units[current - 1]
             }
+            showDaysLived = false
         }
     }
 
     private var formattedCount: String {
         if isExpired { return "0" }
+        if showDaysLived {
+            return DateCalculator.daysLived(dob: userData.dateOfBirth).formatted()
+        }
         return DateCalculator.remaining(
             dob: userData.dateOfBirth,
             lifeExpectancy: userData.lifeExpectancy,
@@ -190,6 +199,7 @@ struct ContentView: View {
 
     private var unitLabel: String {
         if isExpired { return "you made it." }
+        if showDaysLived { return "days lived" }
         switch displayUnit {
         case .days:  return "days remaining"
         case .weeks: return "weeks remaining"

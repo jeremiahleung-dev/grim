@@ -1,27 +1,42 @@
 import SwiftUI
 import WidgetKit
+import AppIntents
 
 struct LockScreenCircularView: View {
     var entry: GrimEntry
 
     var body: some View {
-        ZStack {
-            AccessoryWidgetBackground()
-            VStack(spacing: 0) {
-                Text(compactNumber(entry.daysRemaining))
-                    .font(.system(size: 14, weight: .medium, design: .monospaced))
-                    .minimumScaleFactor(0.5)
-                    .lineLimit(1)
-                Text("days")
-                    .font(.system(size: 7, weight: .regular, design: .monospaced))
-                    .opacity(0.6)
+        Button(intent: CycleDisplayUnit()) {
+            ZStack {
+                AccessoryWidgetBackground()
+                VStack(spacing: 0) {
+                    Text(displayValue)
+                        .font(.system(size: 14, weight: .medium, design: .monospaced))
+                        .minimumScaleFactor(0.5)
+                        .lineLimit(1)
+                    Text(displayLabel)
+                        .font(.system(size: 7, weight: .regular, design: .monospaced))
+                        .opacity(0.6)
+                }
             }
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var displayValue: String {
+        switch entry.widgetDisplayUnit {
+        case "weeks": return "\(entry.weeksRemaining)"
+        case "years": return String(format: "%.1f", entry.yearsRemaining)
+        default:      return compactDays(entry.daysRemaining)
         }
     }
 
-    private func compactNumber(_ n: Int) -> String {
-        if n >= 1000 { return "\(n / 1000)k" }
-        return "\(n)"
+    private var displayLabel: String {
+        switch entry.widgetDisplayUnit {
+        case "weeks": return "weeks"
+        case "years": return "years"
+        default:      return "days"
+        }
     }
 }
 
@@ -29,21 +44,40 @@ struct LockScreenRectangularView: View {
     var entry: GrimEntry
 
     var body: some View {
-        HStack(spacing: 12) {
-            VStack(alignment: .leading, spacing: 1) {
-                Text(entry.daysRemaining.formatted())
-                    .font(.system(size: 16, weight: .medium, design: .monospaced))
-                    .minimumScaleFactor(0.5)
-                    .lineLimit(1)
-                Text("days remaining")
-                    .font(.system(size: 8, weight: .regular, design: .monospaced))
-                    .opacity(0.5)
+        Button(intent: CycleDisplayUnit()) {
+            HStack(spacing: 12) {
+                VStack(alignment: .leading, spacing: 1) {
+                    Text(displayValue)
+                        .font(.system(size: 16, weight: .medium, design: .monospaced))
+                        .minimumScaleFactor(0.5)
+                        .lineLimit(1)
+                    Text(displayLabel)
+                        .font(.system(size: 8, weight: .regular, design: .monospaced))
+                        .opacity(0.5)
+                }
+                Spacer()
+                Text(String(format: "%.0f%%", entry.percentLived * 100))
+                    .font(.system(size: 13, weight: .medium, design: .monospaced))
+                    .opacity(0.7)
             }
-            Spacer()
-            Text(String(format: "%.0f%%", entry.percentLived * 100))
-                .font(.system(size: 13, weight: .medium, design: .monospaced))
-                .opacity(0.7)
+            .padding(.horizontal, 4)
         }
-        .padding(.horizontal, 4)
+        .buttonStyle(.plain)
+    }
+
+    private var displayValue: String {
+        switch entry.widgetDisplayUnit {
+        case "weeks": return entry.weeksRemaining.formatted()
+        case "years": return String(format: "%.1f", entry.yearsRemaining)
+        default:      return entry.daysRemaining.formatted()
+        }
+    }
+
+    private var displayLabel: String {
+        switch entry.widgetDisplayUnit {
+        case "weeks": return "weeks remaining"
+        case "years": return "years remaining"
+        default:      return "days remaining"
+        }
     }
 }

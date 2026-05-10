@@ -23,6 +23,10 @@ class UserData: ObservableObject {
     @Published var weekTasks: [String: [DayTask]]
     @Published var contextBriefing: String?
     @Published var contextDate: Date?
+    @Published var suggestionMemory: [SuggestionMemory]
+    @Published var currentStreak: Int
+    @Published var lastOpenedDate: Date?
+    @Published var notificationHour: Int
 
     private init() {
         let defaultDOB: Date = {
@@ -52,6 +56,14 @@ class UserData: ObservableObject {
         self.weekTasks = storedWeekTasks
         self.contextBriefing = defaults.string(forKey: "contextBriefing")
         self.contextDate = defaults.object(forKey: "contextDate") as? Date
+        let storedMemoryData = defaults.data(forKey: "suggestionMemory")
+        self.suggestionMemory = storedMemoryData.flatMap {
+            try? JSONDecoder().decode([SuggestionMemory].self, from: $0)
+        } ?? []
+        self.currentStreak = max(0, defaults.integer(forKey: "currentStreak"))
+        self.lastOpenedDate = defaults.object(forKey: "lastOpenedDate") as? Date
+        let storedHour = defaults.integer(forKey: "notificationHour")
+        self.notificationHour = storedHour > 0 ? storedHour : 9
     }
 
     func save() {
@@ -68,6 +80,29 @@ class UserData: ObservableObject {
         if let data = try? JSONEncoder().encode(weekTasks) {
             defaults.set(data, forKey: "weekTasks")
         }
+        if let data = try? JSONEncoder().encode(suggestionMemory) {
+            defaults.set(data, forKey: "suggestionMemory")
+        }
+        defaults.set(currentStreak, forKey: "currentStreak")
+        defaults.set(lastOpenedDate, forKey: "lastOpenedDate")
+        defaults.set(notificationHour, forKey: "notificationHour")
+    }
+
+    func updateStreak() {
+        let today = Calendar.current.startOfDay(for: Date())
+        if let last = lastOpenedDate {
+            if Calendar.current.isDateInToday(last) { return }
+            let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: today)!
+            if Calendar.current.isDate(last, inSameDayAs: yesterday) {
+                currentStreak += 1
+            } else {
+                currentStreak = 1
+            }
+        } else {
+            currentStreak = 1
+        }
+        lastOpenedDate = Date()
+        save()
     }
 
     func addLifeItem(_ text: String) {

@@ -53,10 +53,19 @@ struct LifeListView: View {
                                     .frame(width: 4, height: 4)
                                     .padding(.top, 5)
 
-                                Text(item.text)
-                                    .font(Theme.fontLabel)
-                                    .foregroundColor(Theme.ink)
-                                    .multilineTextAlignment(.leading)
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(item.text)
+                                        .font(Theme.fontLabel)
+                                        .foregroundColor(Theme.ink)
+                                        .multilineTextAlignment(.leading)
+
+                                    let days = daysSinceAdded(item)
+                                    if days > 7 {
+                                        Text("\(days)d")
+                                            .font(.system(size: 10, weight: .regular, design: .monospaced))
+                                            .foregroundColor(Theme.muted.opacity(0.35))
+                                    }
+                                }
 
                                 Spacer()
                             }
@@ -159,6 +168,10 @@ struct LifeListView: View {
         newItemText = ""
         inputFocused = false
         regeneratePrompt()
+    }
+
+    private func daysSinceAdded(_ item: LifeItem) -> Int {
+        Calendar.current.dateComponents([.day], from: item.createdAt, to: Date()).day ?? 0
     }
 
     private func refreshPromptIfNeeded() {

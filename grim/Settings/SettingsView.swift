@@ -7,8 +7,14 @@ struct SettingsView: View {
     @State private var lifeExpectancy: Double = Double(UserData.shared.lifeExpectancy)
     @State private var focusedSection: SettingsSection = .dob
     @State private var saved = false
+    @State private var notificationTime: Date = {
+        var comps = Calendar.current.dateComponents([.year, .month, .day], from: Date())
+        comps.hour = UserData.shared.notificationHour
+        comps.minute = 0
+        return Calendar.current.date(from: comps) ?? Date()
+    }()
 
-    enum SettingsSection { case dob, lifeExpectancy }
+    enum SettingsSection { case dob, lifeExpectancy, notifications }
 
     var body: some View {
         ZStack {
@@ -68,6 +74,23 @@ struct SettingsView: View {
                         .onTapGesture { withAnimation { focusedSection = .lifeExpectancy } }
                         .padding(.horizontal, 28)
 
+                        Divider()
+                            .background(Theme.border)
+                            .padding(.vertical, 32)
+
+                        // Section: Daily reminder
+                        settingSection(
+                            label: "daily reminder",
+                            isActive: focusedSection == .notifications
+                        ) {
+                            DatePicker("", selection: $notificationTime, displayedComponents: .hourAndMinute)
+                                .datePickerStyle(.wheel)
+                                .labelsHidden()
+                                .padding(.horizontal, 12)
+                        }
+                        .onTapGesture { withAnimation { focusedSection = .notifications } }
+                        .padding(.horizontal, 28)
+
                     }
                 }
 
@@ -79,6 +102,7 @@ struct SettingsView: View {
                     haptic.notificationOccurred(.success)
                     userData.dateOfBirth = dob
                     userData.lifeExpectancy = Int(lifeExpectancy)
+                    userData.notificationHour = Calendar.current.component(.hour, from: notificationTime)
                     userData.save()
                     withAnimation(.easeInOut(duration: 0.15)) { saved = true }
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) { dismiss() }

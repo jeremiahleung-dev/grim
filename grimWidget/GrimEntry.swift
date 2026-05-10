@@ -10,4 +10,7 @@ struct GrimEntry: TimelineEntry {
     let weeksLived: Int
     let lifeExpectancy: Int
     let dob: Date
+    let widgetDisplayUnit: String
+    let contextBriefing: String?
+    let currentStreak: Int
 }
