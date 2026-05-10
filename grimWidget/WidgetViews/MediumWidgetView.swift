@@ -4,30 +4,63 @@ import WidgetKit
 struct MediumWidgetView: View {
     var entry: GrimEntry
 
-    var body: some View {
-        HStack(alignment: .center) {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(entry.daysRemaining.formatted())
-                    .font(.system(size: 42, weight: .medium, design: .monospaced))
-                    .foregroundColor(Color(hex: "#f0ece0"))
-                    .minimumScaleFactor(0.4)
-                    .lineLimit(1)
+    private var hpRemaining: Double { 1.0 - entry.percentLived }
 
-                Text("days remaining")
-                    .font(.system(size: 9, weight: .regular, design: .monospaced))
-                    .foregroundColor(Color(hex: "#555555"))
+    private var hpColor: Color {
+        if hpRemaining > 0.5 { return Color(hex: "#4ade80") }
+        if hpRemaining > 0.2 { return Color(hex: "#e8a045") }
+        return Color(hex: "#ef4444")
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(alignment: .center) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(entry.daysRemaining.formatted())
+                        .font(.system(size: 42, weight: .medium, design: .monospaced))
+                        .foregroundColor(Color(hex: "#f0ece0"))
+                        .minimumScaleFactor(0.4)
+                        .lineLimit(1)
+
+                    Text("days remaining")
+                        .font(.system(size: 9, weight: .regular, design: .monospaced))
+                        .foregroundColor(Color(hex: "#555555"))
+                }
+
+                Spacer()
+
+                VStack(alignment: .trailing, spacing: 8) {
+                    statItem(value: entry.weeksRemaining.formatted(), label: "weeks")
+                    statItem(value: String(format: "%.1f", entry.yearsRemaining), label: "years")
+                    statItem(
+                        value: String(format: "%.0f%%", entry.percentLived * 100),
+                        label: "lived",
+                        highlight: true
+                    )
+                }
             }
 
-            Spacer()
+            // Health bar
+            HStack(spacing: 6) {
+                Text("HP")
+                    .font(.system(size: 7, weight: .bold, design: .monospaced))
+                    .foregroundColor(hpColor)
 
-            VStack(alignment: .trailing, spacing: 8) {
-                statItem(value: entry.weeksRemaining.formatted(), label: "weeks")
-                statItem(value: String(format: "%.1f", entry.yearsRemaining), label: "years")
-                statItem(
-                    value: String(format: "%.0f%%", entry.percentLived * 100),
-                    label: "lived",
-                    highlight: true
-                )
+                GeometryReader { geo in
+                    ZStack(alignment: .leading) {
+                        Rectangle()
+                            .fill(Color(hex: "#1a1a1a"))
+                        Rectangle()
+                            .fill(hpColor)
+                            .frame(width: geo.size.width * hpRemaining)
+                    }
+                    .cornerRadius(1)
+                }
+                .frame(height: 5)
+
+                Text(String(format: "%.0f%%", hpRemaining * 100))
+                    .font(.system(size: 7, weight: .regular, design: .monospaced))
+                    .foregroundColor(hpColor)
             }
         }
         .padding(18)
