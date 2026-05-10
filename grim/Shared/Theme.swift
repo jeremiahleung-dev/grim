@@ -4,8 +4,8 @@ enum Theme {
     static let background = Color(hex: "#0a0a0a")
     static let surface    = Color(hex: "#1a1a1a")
     static let ink        = Color(hex: "#f0ece0")
-    static let muted      = Color(hex: "#555555")
-    static let border     = Color(hex: "#222222")
+    static let muted      = Color(hex: "#888888")
+    static let border     = Color(hex: "#2e2e2e")
     static let accent     = Color(hex: "#e8a045")
 
     static let fontHero    = Font.system(size: 72, weight: .medium, design: .monospaced)
