@@ -29,8 +29,8 @@ struct MediumWidgetView: View {
                             LinearGradient(
                                 stops: [
                                     .init(color: .black, location: 0),
-                                    .init(color: .black, location: 0.5),
-                                    .init(color: .clear,  location: 0.72)
+                                    .init(color: .black, location: 0.28),
+                                    .init(color: .clear,  location: 0.50)
                                 ],
                                 startPoint: .leading,
                                 endPoint: .trailing
