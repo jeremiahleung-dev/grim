@@ -5,9 +5,8 @@ struct MediumWidgetView: View {
     var entry: GrimEntry
 
     var body: some View {
-        HStack(alignment: .bottom) {
+        HStack(alignment: .center) {
             VStack(alignment: .leading, spacing: 4) {
-                Spacer()
                 Text(entry.daysRemaining.formatted())
                     .font(.system(size: 42, weight: .medium, design: .monospaced))
                     .foregroundColor(Color(hex: "#f0ece0"))
