@@ -20,7 +20,7 @@ struct MediumWidgetView: View {
                 // Number fills full width — fades on the right so stats remain legible
                 VStack(alignment: .leading, spacing: 2) {
                     Text(entry.daysRemaining.formatted())
-                        .font(.system(size: 300, weight: .bold, design: .monospaced))
+                        .font(.system(size: 250, weight: .bold, design: .monospaced))
                         .foregroundColor(Color(hex: "#f0ece0"))
                         .minimumScaleFactor(0.1)
                         .lineLimit(1)
