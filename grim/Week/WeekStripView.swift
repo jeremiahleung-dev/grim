@@ -25,6 +25,11 @@ struct WeekStripView: View {
         .padding(.horizontal, 28)
     }
 
+    private func dayLetter(_ date: Date) -> String {
+        let weekday = calendar.component(.weekday, from: date)
+        return weekday == 5 ? "R" : date.formatted(.dateTime.weekday(.narrow))
+    }
+
     @ViewBuilder
     private func dayCell(_ date: Date) -> some View {
         let isToday = calendar.isDateInToday(date)
@@ -33,7 +38,7 @@ struct WeekStripView: View {
         let color: Color = isToday ? Theme.accent : (isPast ? Theme.muted.opacity(0.3) : Theme.muted)
 
         VStack(spacing: 6) {
-            Text(date.formatted(.dateTime.weekday(.narrow)))
+            Text(dayLetter(date))
                 .font(Theme.fontLabel)
                 .foregroundColor(color)
 
