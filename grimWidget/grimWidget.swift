@@ -69,6 +69,16 @@ struct GrimWidgetEntryView: View {
     var entry: GrimEntry
 
     var body: some View {
+        if #available(iOS 17, *) {
+            content
+                .containerBackground(Color(hex: "#0a0a0a"), for: .widget)
+        } else {
+            content
+        }
+    }
+
+    @ViewBuilder
+    private var content: some View {
         switch family {
         case .systemSmall:
             SmallWidgetView(entry: entry)
