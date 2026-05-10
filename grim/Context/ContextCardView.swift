@@ -23,6 +23,7 @@ struct ContextCardView: View {
                         .font(Theme.fontLabel)
                         .foregroundColor(Theme.ink.opacity(0.85))
                         .lineSpacing(4)
+                        .lineLimit(2)
                         .multilineTextAlignment(.leading)
 
                     Text("refresh →")

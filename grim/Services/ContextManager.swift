@@ -118,7 +118,7 @@ class ContextManager {
         What's happening in their life right now:
         \(sections.joined(separator: "\n\n"))
 
-        Write a warm, grounding 2-3 sentence daily context. Start with "right now," (lowercase). Be specific — mention real events, real people, real data from their life. Weave physical state, upcoming moments, and one person worth connecting with. Never mention death or time running out. No emojis.
+        Write one grounding sentence of at most 30 words. Start with "right now," (lowercase). Be specific — mention a real event, real data, or a real person from their life. No emojis. No second sentence.
         """
 
         let url = URL(string: "https://api.anthropic.com/v1/messages")!
