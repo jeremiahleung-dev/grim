@@ -17,13 +17,13 @@ struct MediumWidgetView: View {
             HStack(alignment: .center) {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(entry.daysRemaining.formatted())
-                        .font(.system(size: 42, weight: .medium, design: .monospaced))
+                        .font(.system(size: 54, weight: .bold, design: .monospaced))
                         .foregroundColor(Color(hex: "#f0ece0"))
                         .minimumScaleFactor(0.4)
                         .lineLimit(1)
 
                     Text("days remaining")
-                        .font(.system(size: 9, weight: .regular, design: .monospaced))
+                        .font(.system(size: 11, weight: .regular, design: .monospaced))
                         .foregroundColor(Color(hex: "#555555"))
                 }
 
@@ -41,27 +41,17 @@ struct MediumWidgetView: View {
             }
 
             // Health bar
-            HStack(spacing: 6) {
-                Text("HP")
-                    .font(.system(size: 7, weight: .bold, design: .monospaced))
-                    .foregroundColor(hpColor)
-
-                GeometryReader { geo in
-                    ZStack(alignment: .leading) {
-                        Rectangle()
-                            .fill(Color(hex: "#1a1a1a"))
-                        Rectangle()
-                            .fill(hpColor)
-                            .frame(width: geo.size.width * hpRemaining)
-                    }
-                    .cornerRadius(1)
+            GeometryReader { geo in
+                ZStack(alignment: .leading) {
+                    Rectangle()
+                        .fill(Color(hex: "#1a1a1a"))
+                    Rectangle()
+                        .fill(hpColor)
+                        .frame(width: geo.size.width * hpRemaining)
                 }
-                .frame(height: 5)
-
-                Text(String(format: "%.0f%%", hpRemaining * 100))
-                    .font(.system(size: 7, weight: .regular, design: .monospaced))
-                    .foregroundColor(hpColor)
+                .cornerRadius(1)
             }
+            .frame(height: 5)
         }
         .padding(18)
     }
