@@ -7,6 +7,7 @@ struct ContentView: View {
     @State private var showLifeList = false
     @State private var appeared = false
     @State private var dragOffset: CGFloat = 0
+    @State private var selectedDay: Date?
 
     private let units = DisplayUnit.allCases
 
@@ -29,6 +30,9 @@ struct ContentView: View {
                 }
                 .padding(.horizontal, 28)
                 .padding(.top, 60)
+
+                WeekStripView(userData: userData) { day in selectedDay = day }
+                    .padding(.top, 20)
 
                 Spacer()
 
@@ -123,6 +127,12 @@ struct ContentView: View {
         )
         .sheet(isPresented: $showSettings) { SettingsView() }
         .sheet(isPresented: $showLifeList) { LifeListView() }
+        .sheet(isPresented: Binding(
+            get: { selectedDay != nil },
+            set: { if !$0 { selectedDay = nil } }
+        )) {
+            if let day = selectedDay { DayDetailView(date: day) }
+        }
     }
 
     // MARK: - Daily prompt hint

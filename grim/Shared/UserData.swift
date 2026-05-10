@@ -20,6 +20,7 @@ class UserData: ObservableObject {
     @Published var lifeItems: [LifeItem]
     @Published var dailyPromptText: String?
     @Published var dailyPromptDate: Date?
+    @Published var weekTasks: [String: [DayTask]]
 
     private init() {
         let defaultDOB: Date = {
@@ -35,6 +36,10 @@ class UserData: ObservableObject {
         let storedItems: [LifeItem] = storedItemsData.flatMap {
             try? JSONDecoder().decode([LifeItem].self, from: $0)
         } ?? []
+        let storedWeekData = defaults.data(forKey: "weekTasks")
+        let storedWeekTasks: [String: [DayTask]] = storedWeekData.flatMap {
+            try? JSONDecoder().decode([String: [DayTask]].self, from: $0)
+        } ?? [:]
 
         self.dateOfBirth = storedDOB
         self.lifeExpectancy = storedLE > 0 ? storedLE : 100
@@ -42,6 +47,7 @@ class UserData: ObservableObject {
         self.lifeItems = storedItems
         self.dailyPromptText = defaults.string(forKey: "dailyPromptText")
         self.dailyPromptDate = defaults.object(forKey: "dailyPromptDate") as? Date
+        self.weekTasks = storedWeekTasks
     }
 
     func save() {
@@ -52,6 +58,9 @@ class UserData: ObservableObject {
         defaults.set(dailyPromptDate, forKey: "dailyPromptDate")
         if let data = try? JSONEncoder().encode(lifeItems) {
             defaults.set(data, forKey: "lifeItems")
+        }
+        if let data = try? JSONEncoder().encode(weekTasks) {
+            defaults.set(data, forKey: "weekTasks")
         }
     }
 
@@ -65,5 +74,29 @@ class UserData: ObservableObject {
         dailyPromptText = nil
         dailyPromptDate = nil
         save()
+    }
+
+    func tasksForDate(_ date: Date) -> [DayTask] {
+        weekTasks[dateKey(date)] ?? []
+    }
+
+    func addTask(_ text: String, for date: Date) {
+        let key = dateKey(date)
+        var tasks = weekTasks[key] ?? []
+        tasks.append(DayTask(text: text))
+        weekTasks[key] = tasks
+        save()
+    }
+
+    func removeTask(_ task: DayTask, for date: Date) {
+        let key = dateKey(date)
+        weekTasks[key]?.removeAll { $0.id == task.id }
+        save()
+    }
+
+    private func dateKey(_ date: Date) -> String {
+        let f = DateFormatter()
+        f.dateFormat = "yyyy-MM-dd"
+        return f.string(from: date)
     }
 }
