@@ -73,7 +73,10 @@ struct GrimWidgetEntryView: View {
             content
                 .containerBackground(Color(hex: "#0a0a0a"), for: .widget)
         } else {
-            content
+            ZStack {
+                Color(hex: "#0a0a0a")
+                content
+            }
         }
     }
 
