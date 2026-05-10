@@ -17,13 +17,13 @@ struct MediumWidgetView: View {
             HStack(alignment: .center) {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(entry.daysRemaining.formatted())
-                        .font(.system(size: 54, weight: .bold, design: .monospaced))
+                        .font(.system(size: 100, weight: .bold, design: .monospaced))
                         .foregroundColor(Color(hex: "#f0ece0"))
-                        .minimumScaleFactor(0.4)
+                        .minimumScaleFactor(0.3)
                         .lineLimit(1)
 
                     Text("days remaining")
-                        .font(.system(size: 11, weight: .regular, design: .monospaced))
+                        .font(.system(size: 9, weight: .regular, design: .monospaced))
                         .foregroundColor(Color(hex: "#555555"))
                 }
 
