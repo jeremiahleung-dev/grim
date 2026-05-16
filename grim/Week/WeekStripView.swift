@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct WeekStripView: View {
+    @EnvironmentObject private var themeManager: ThemeManager
     @ObservedObject var userData: UserData
     var onSelectDay: (Date) -> Void
 
@@ -8,7 +9,7 @@ struct WeekStripView: View {
 
     private var weekDays: [Date] {
         let today = Date()
-        let weekday = calendar.component(.weekday, from: today) // 1 = Sun
+        let weekday = calendar.component(.weekday, from: today)
         let sunday = calendar.date(byAdding: .day, value: -(weekday - 1), to: today)!
         return (0..<7).compactMap { calendar.date(byAdding: .day, value: $0, to: sunday) }
     }
@@ -43,13 +44,9 @@ struct WeekStripView: View {
         let isToday = calendar.isDateInToday(date)
         let isPast = !isToday && date < calendar.startOfDay(for: Date())
         let hasTasks = !userData.tasksForDate(date).isEmpty
-        let color: Color = isToday ? Theme.accent : (isPast ? Theme.ink.opacity(0.25) : Theme.ink)
+        let color: Color = isToday ? Theme.accent : (isPast ? Theme.ink.opacity(0.2) : Theme.ink.opacity(0.6))
 
         VStack(spacing: 4) {
-            Text("\(calendar.component(.day, from: date))")
-                .font(.system(size: 11, weight: .regular, design: .monospaced))
-                .foregroundColor(color)
-
             Text(dayLetter(date))
                 .font(.system(size: 11, weight: isToday ? .medium : .regular, design: .monospaced))
                 .foregroundColor(color)

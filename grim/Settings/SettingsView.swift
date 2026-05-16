@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct SettingsView: View {
+    @EnvironmentObject private var themeManager: ThemeManager
     @StateObject private var userData = UserData.shared
     @Environment(\.dismiss) private var dismiss
     @State private var dob: Date = UserData.shared.dateOfBirth
@@ -90,6 +91,32 @@ struct SettingsView: View {
                         }
                         .onTapGesture { withAnimation { focusedSection = .notifications } }
                         .padding(.horizontal, 28)
+
+                        Divider()
+                            .background(Theme.border)
+                            .padding(.vertical, 32)
+
+                        // Section: Appearance
+                        VStack(alignment: .leading, spacing: 16) {
+                            Text("appearance")
+                                .font(Theme.fontLabel)
+                                .foregroundColor(Theme.ink)
+                                .padding(.horizontal, 28)
+
+                            BrightnessSlider(brightness: $themeManager.brightness)
+                                .padding(.horizontal, 28)
+
+                            HStack {
+                                Text("dark")
+                                    .font(Theme.fontLabel)
+                                    .foregroundColor(Theme.muted)
+                                Spacer()
+                                Text("light")
+                                    .font(Theme.fontLabel)
+                                    .foregroundColor(Theme.muted)
+                            }
+                            .padding(.horizontal, 28)
+                        }
 
                     }
                 }

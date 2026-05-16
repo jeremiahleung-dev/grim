@@ -1,10 +1,11 @@
 import SwiftUI
 
 @main
-struct grimApp: App {
+struct LiveMoreApp: App {
     var body: some Scene {
         WindowGroup {
             RootView()
+                .environmentObject(ThemeManager.shared)
                 .onAppear {
                     let userData = UserData.shared
                     userData.updateStreak()
@@ -26,7 +27,7 @@ struct grimApp: App {
 }
 
 struct RootView: View {
-    @AppStorage("hasOnboarded", store: UserDefaults(suiteName: "group.com.grim.app"))
+    @AppStorage("hasOnboarded", store: UserDefaults(suiteName: "group.com.moretolife.app"))
     private var hasOnboarded: Bool = false
 
     var body: some View {

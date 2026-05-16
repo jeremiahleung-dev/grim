@@ -4,10 +4,10 @@ import Foundation
 @available(iOS 16.2, *)
 final class ActivityManager {
     static let shared = ActivityManager()
-    private var currentActivity: Activity<GrimActivityAttributes>?
+    private var currentActivity: Activity<LiveMoreActivityAttributes>?
 
     func update(dob: Date, lifeExpectancy: Int, daysRemaining: Int, briefing: String, domain: String, streak: Int) {
-        let state = GrimActivityAttributes.ContentState(
+        let state = LiveMoreActivityAttributes.ContentState(
             daysRemaining: daysRemaining,
             contextBriefing: briefing,
             domain: domain,
@@ -17,9 +17,9 @@ final class ActivityManager {
             Task { await activity.update(ActivityContent(state: state, staleDate: nil)) }
         } else {
             guard ActivityAuthorizationInfo().areActivitiesEnabled else { return }
-            let attrs = GrimActivityAttributes(dob: dob, lifeExpectancy: lifeExpectancy)
+            let attrs = LiveMoreActivityAttributes(dob: dob, lifeExpectancy: lifeExpectancy)
             do {
-                currentActivity = try Activity<GrimActivityAttributes>.request(
+                currentActivity = try Activity<LiveMoreActivityAttributes>.request(
                     attributes: attrs,
                     content: ActivityContent(state: state, staleDate: nil),
                     pushType: nil

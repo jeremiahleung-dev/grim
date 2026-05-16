@@ -8,7 +8,7 @@ struct OnboardingView: View {
     @State private var lifeExpectancy: Double = 90
     @State private var welcomePulse = false
 
-    @AppStorage("hasOnboarded", store: UserDefaults(suiteName: "group.com.grim.app"))
+    @AppStorage("hasOnboarded", store: UserDefaults(suiteName: "group.com.moretolife.app"))
     private var hasOnboarded: Bool = false
 
     var body: some View {
@@ -65,9 +65,12 @@ struct OnboardingView: View {
 
     private var welcomeStep: some View {
         VStack(alignment: .leading, spacing: 20) {
-            Text("grim")
-                .font(Theme.fontDisplay)
-                .foregroundColor(Theme.ink)
+            HStack(spacing: 12) {
+                WeekMark(size: 60)
+                Text("live more")
+                    .font(Theme.fontDisplay)
+                    .foregroundColor(Theme.ink)
+            }
 
             Text("you have a finite number\nof days.\n\nthis is how many remain.")
                 .font(Theme.fontLabel)

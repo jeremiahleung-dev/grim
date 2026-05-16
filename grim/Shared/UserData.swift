@@ -1,7 +1,7 @@
 import Foundation
 import Combine
 
-let appGroupID = "group.com.grim.app"
+let appGroupID = "group.com.moretolife.app"
 
 enum DisplayUnit: String, CaseIterable, Codable {
     case days = "days"
@@ -18,8 +18,6 @@ class UserData: ObservableObject {
     @Published var lifeExpectancy: Int
     @Published var displayUnit: DisplayUnit
     @Published var lifeItems: [LifeItem]
-    @Published var dailyPromptText: String?
-    @Published var dailyPromptDate: Date?
     @Published var weekTasks: [String: [DayTask]]
     @Published var contextBriefing: String?
     @Published var contextDate: Date?
@@ -51,8 +49,6 @@ class UserData: ObservableObject {
         self.lifeExpectancy = storedLE > 0 ? storedLE : 100
         self.displayUnit = storedUnit
         self.lifeItems = storedItems
-        self.dailyPromptText = defaults.string(forKey: "dailyPromptText")
-        self.dailyPromptDate = defaults.object(forKey: "dailyPromptDate") as? Date
         self.weekTasks = storedWeekTasks
         self.contextBriefing = defaults.string(forKey: "contextBriefing")
         self.contextDate = defaults.object(forKey: "contextDate") as? Date
@@ -64,14 +60,14 @@ class UserData: ObservableObject {
         self.lastOpenedDate = defaults.object(forKey: "lastOpenedDate") as? Date
         let storedHour = defaults.integer(forKey: "notificationHour")
         self.notificationHour = storedHour > 0 ? storedHour : 9
+
+        defaults.set("days", forKey: "widgetDisplayUnit")
     }
 
     func save() {
         defaults.set(dateOfBirth, forKey: "dob")
         defaults.set(lifeExpectancy, forKey: "lifeExpectancy")
         defaults.set(displayUnit.rawValue, forKey: "displayUnit")
-        defaults.set(dailyPromptText, forKey: "dailyPromptText")
-        defaults.set(dailyPromptDate, forKey: "dailyPromptDate")
         defaults.set(contextBriefing, forKey: "contextBriefing")
         defaults.set(contextDate, forKey: "contextDate")
         if let data = try? JSONEncoder().encode(lifeItems) {
@@ -112,8 +108,6 @@ class UserData: ObservableObject {
 
     func removeLifeItem(_ item: LifeItem) {
         lifeItems.removeAll { $0.id == item.id }
-        dailyPromptText = nil
-        dailyPromptDate = nil
         save()
     }
 

@@ -30,7 +30,11 @@ class AgentOrchestrator {
         fetchGroup.enter()
         calendar.fetchPendingReminders { r in reminders = r; fetchGroup.leave() }
 
-        birthdays = contacts.fetchUpcomingBirthdays()
+        fetchGroup.enter()
+        DispatchQueue.global(qos: .userInitiated).async {
+            birthdays = self.contacts.fetchUpcomingBirthdays()
+            fetchGroup.leave()
+        }
 
         fetchGroup.enter()
         weather.fetch { w in weatherStr = w; fetchGroup.leave() }
@@ -66,6 +70,13 @@ class AgentOrchestrator {
                 agentGroup.leave()
             }
 
+            let goals = userData.lifeItems.map { $0.text }
+            agentGroup.enter()
+            LifeGoalsAgent().run(goals: goals) { candidate in
+                if let c = candidate { lock.withLock { candidates.append(c) } }
+                agentGroup.leave()
+            }
+
             agentGroup.notify(queue: .global()) {
                 let memory = userData.suggestionMemory
                     .sorted { $0.date > $1.date }
@@ -74,7 +85,12 @@ class AgentOrchestrator {
 
                 CoordinatorAgent().run(candidates: candidates, memory: Array(memory)) { result in
                     DispatchQueue.main.async {
-                        if let text = result, !text.isEmpty {
+                        let cleanResult = result.flatMap { t -> String? in
+                            let lower = t.lowercased()
+                            let junk = ["cannot provide", "no suggestion", "i cannot", "all candidates", "no candidates", "unable to"]
+                            return junk.contains(where: { lower.contains($0) }) ? nil : t
+                        }
+                        if let text = cleanResult, !text.isEmpty {
                             userData.contextBriefing = text
                             userData.contextDate = Date()
                             let domain = candidates.max(by: { $0.urgency < $1.urgency })?.domain ?? "unknown"
@@ -86,7 +102,8 @@ class AgentOrchestrator {
                             userData.save()
                             let daysLeft = DateCalculator.daysRemaining(dob: userData.dateOfBirth, lifeExpectancy: userData.lifeExpectancy)
                             NotificationService.scheduleDailyNotification(text: text, daysRemaining: daysLeft, hour: userData.notificationHour)
-                            if #available(iOS 16.2, *) {
+                            if
+                                #available(iOS 16.2, *) {
                                 ActivityManager.shared.update(
                                     dob: userData.dateOfBirth,
                                     lifeExpectancy: userData.lifeExpectancy,

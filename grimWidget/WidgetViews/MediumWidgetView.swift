@@ -2,7 +2,7 @@ import SwiftUI
 import WidgetKit
 
 struct MediumWidgetView: View {
-    var entry: GrimEntry
+    var entry: LiveMoreEntry
 
     private var hpRemaining: Double { 1.0 - entry.percentLived }
 

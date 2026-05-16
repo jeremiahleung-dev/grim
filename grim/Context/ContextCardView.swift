@@ -1,13 +1,14 @@
 import SwiftUI
 
 struct ContextCardView: View {
+    @EnvironmentObject private var themeManager: ThemeManager
     @StateObject private var userData = UserData.shared
     @State private var isRefreshing = false
 
     var body: some View {
         Button { refresh() } label: {
             VStack(alignment: .leading, spacing: 6) {
-                Text("right now")
+                Text("today")
                     .font(Theme.fontLabel)
                     .foregroundColor(Theme.muted)
 
@@ -21,7 +22,7 @@ struct ContextCardView: View {
                 } else if let briefing = userData.contextBriefing, !briefing.isEmpty {
                     Text(briefing)
                         .font(Theme.fontLabel)
-                        .foregroundColor(Theme.ink.opacity(0.85))
+                        .foregroundColor(Theme.ink.opacity(0.8))
                         .lineSpacing(4)
                         .lineLimit(2)
                         .multilineTextAlignment(.leading)
@@ -31,15 +32,15 @@ struct ContextCardView: View {
                         .foregroundColor(Theme.muted.opacity(0.5))
                         .padding(.top, 2)
                 } else {
-                    Text("tap to read what's happening in your life →")
+                    Text("tap to add things you want to do with your days →")
                         .font(Theme.fontLabel)
                         .foregroundColor(Theme.muted.opacity(0.5))
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(18)
-            .offset(y: -10)
         }
+        .overlay(Rectangle().stroke(Theme.border, lineWidth: 1))
         .onAppear { refresh() }
     }
 

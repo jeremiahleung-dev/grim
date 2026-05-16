@@ -2,7 +2,7 @@ import SwiftUI
 import WidgetKit
 
 struct SmallWidgetView: View {
-    var entry: GrimEntry
+    var entry: LiveMoreEntry
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {

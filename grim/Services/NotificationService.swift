@@ -11,7 +11,7 @@ struct NotificationService {
         let center = UNUserNotificationCenter.current()
         center.getNotificationSettings { settings in
             guard settings.authorizationStatus == .authorized else { return }
-            center.removePendingNotificationRequests(withIdentifiers: ["grim.daily"])
+            center.removePendingNotificationRequests(withIdentifiers: ["moretolife.daily"])
 
             let content = UNMutableNotificationContent()
             content.title = "\(daysRemaining.formatted(.number)) days"
@@ -23,7 +23,7 @@ struct NotificationService {
             dc.minute = 0
 
             let trigger = UNCalendarNotificationTrigger(dateMatching: dc, repeats: true)
-            let request = UNNotificationRequest(identifier: "grim.daily", content: content, trigger: trigger)
+            let request = UNNotificationRequest(identifier: "moretolife.daily", content: content, trigger: trigger)
             center.add(request)
         }
     }
@@ -32,7 +32,7 @@ struct NotificationService {
         let center = UNUserNotificationCenter.current()
         center.getNotificationSettings { settings in
             guard settings.authorizationStatus == .authorized else { return }
-            center.removePendingNotificationRequests(withIdentifiers: ["grim.weekly"])
+            center.removePendingNotificationRequests(withIdentifiers: ["moretolife.weekly"])
 
             let content = UNMutableNotificationContent()
             content.title = "this week"
@@ -45,7 +45,7 @@ struct NotificationService {
             dc.minute = 0
 
             let trigger = UNCalendarNotificationTrigger(dateMatching: dc, repeats: true)
-            let request = UNNotificationRequest(identifier: "grim.weekly", content: content, trigger: trigger)
+            let request = UNNotificationRequest(identifier: "moretolife.weekly", content: content, trigger: trigger)
             center.add(request)
         }
     }

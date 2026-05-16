@@ -3,24 +3,30 @@ import WidgetKit
 import AppIntents
 
 struct LockScreenCircularView: View {
-    var entry: GrimEntry
+    var entry: LiveMoreEntry
 
     var body: some View {
-        Button(intent: CycleDisplayUnit()) {
-            ZStack {
-                AccessoryWidgetBackground()
-                VStack(spacing: 0) {
-                    Text(displayValue)
-                        .font(.system(size: 14, weight: .medium, design: .monospaced))
-                        .minimumScaleFactor(0.5)
-                        .lineLimit(1)
-                    Text(displayLabel)
-                        .font(.system(size: 7, weight: .regular, design: .monospaced))
-                        .opacity(0.6)
-                }
+        if #available(iOS 17, *) {
+            Button(intent: CycleDisplayUnit()) { circularContent }
+                .buttonStyle(.plain)
+        } else {
+            circularContent
+        }
+    }
+
+    private var circularContent: some View {
+        ZStack {
+            AccessoryWidgetBackground()
+            VStack(spacing: 0) {
+                Text(displayValue)
+                    .font(.system(size: 14, weight: .medium, design: .monospaced))
+                    .minimumScaleFactor(0.5)
+                    .lineLimit(1)
+                Text(displayLabel)
+                    .font(.system(size: 7, weight: .regular, design: .monospaced))
+                    .opacity(0.6)
             }
         }
-        .buttonStyle(.plain)
     }
 
     private var displayValue: String {
@@ -41,28 +47,34 @@ struct LockScreenCircularView: View {
 }
 
 struct LockScreenRectangularView: View {
-    var entry: GrimEntry
+    var entry: LiveMoreEntry
 
     var body: some View {
-        Button(intent: CycleDisplayUnit()) {
-            HStack(spacing: 12) {
-                VStack(alignment: .leading, spacing: 1) {
-                    Text(displayValue)
-                        .font(.system(size: 16, weight: .medium, design: .monospaced))
-                        .minimumScaleFactor(0.5)
-                        .lineLimit(1)
-                    Text(displayLabel)
-                        .font(.system(size: 8, weight: .regular, design: .monospaced))
-                        .opacity(0.5)
-                }
-                Spacer()
-                Text(String(format: "%.0f%%", entry.percentLived * 100))
-                    .font(.system(size: 13, weight: .medium, design: .monospaced))
-                    .opacity(0.7)
-            }
-            .padding(.horizontal, 4)
+        if #available(iOS 17, *) {
+            Button(intent: CycleDisplayUnit()) { rectangularContent }
+                .buttonStyle(.plain)
+        } else {
+            rectangularContent
         }
-        .buttonStyle(.plain)
+    }
+
+    private var rectangularContent: some View {
+        HStack(spacing: 12) {
+            VStack(alignment: .leading, spacing: 1) {
+                Text(displayValue)
+                    .font(.system(size: 16, weight: .medium, design: .monospaced))
+                    .minimumScaleFactor(0.5)
+                    .lineLimit(1)
+                Text(displayLabel)
+                    .font(.system(size: 8, weight: .regular, design: .monospaced))
+                    .opacity(0.5)
+            }
+            Spacer()
+            Text(String(format: "%.0f%%", entry.percentLived * 100))
+                .font(.system(size: 13, weight: .medium, design: .monospaced))
+                .opacity(0.7)
+        }
+        .padding(.horizontal, 4)
     }
 
     private var displayValue: String {

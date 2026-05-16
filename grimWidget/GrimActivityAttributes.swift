@@ -2,7 +2,7 @@ import ActivityKit
 import Foundation
 
 @available(iOS 16.1, *)
-struct GrimActivityAttributes: ActivityAttributes {
+struct LiveMoreActivityAttributes: ActivityAttributes {
     struct ContentState: Codable, Hashable {
         var daysRemaining: Int
         var contextBriefing: String

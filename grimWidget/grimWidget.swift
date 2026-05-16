@@ -1,18 +1,18 @@
 import WidgetKit
 import SwiftUI
 
-struct GrimProvider: TimelineProvider {
-    private let defaults = UserDefaults(suiteName: "group.com.grim.app")!
+struct LiveMoreProvider: TimelineProvider {
+    private let defaults = UserDefaults(suiteName: "group.com.moretolife.app")!
 
-    func placeholder(in context: Context) -> GrimEntry {
+    func placeholder(in context: Context) -> LiveMoreEntry {
         makeEntry()
     }
 
-    func getSnapshot(in context: Context, completion: @escaping (GrimEntry) -> Void) {
+    func getSnapshot(in context: Context, completion: @escaping (LiveMoreEntry) -> Void) {
         completion(makeEntry())
     }
 
-    func getTimeline(in context: Context, completion: @escaping (Timeline<GrimEntry>) -> Void) {
+    func getTimeline(in context: Context, completion: @escaping (Timeline<LiveMoreEntry>) -> Void) {
         let entry = makeEntry()
         let midnight = Calendar.current.startOfDay(
             for: Calendar.current.date(byAdding: .day, value: 1, to: Date())!
@@ -21,7 +21,7 @@ struct GrimProvider: TimelineProvider {
         completion(timeline)
     }
 
-    private func makeEntry() -> GrimEntry {
+    private func makeEntry() -> LiveMoreEntry {
         let dob: Date = defaults.object(forKey: "dob") as? Date ?? {
             var c = DateComponents()
             c.year = 1996; c.month = 7; c.day = 17
@@ -30,7 +30,7 @@ struct GrimProvider: TimelineProvider {
         let le = defaults.integer(forKey: "lifeExpectancy") > 0
             ? defaults.integer(forKey: "lifeExpectancy") : 100
 
-        return GrimEntry(
+        return LiveMoreEntry(
             date: Date(),
             daysRemaining: DateCalculator.daysRemaining(dob: dob, lifeExpectancy: le),
             weeksRemaining: DateCalculator.weeksRemaining(dob: dob, lifeExpectancy: le),
@@ -47,21 +47,24 @@ struct GrimProvider: TimelineProvider {
 }
 
 @main
-struct GrimWidgetBundle: WidgetBundle {
+struct LiveMoreWidgetBundle: WidgetBundle {
     var body: some Widget {
-        GrimWidget()
-        GrimLiveActivity()
+        LiveMoreWidget()
+        LiveMoreContextWidget()
+        if #available(iOS 16.1, *) {
+            LiveMoreLiveActivity()
+        }
     }
 }
 
-struct GrimWidget: Widget {
-    let kind: String = "GrimWidget"
+struct LiveMoreWidget: Widget {
+    let kind: String = "LiveMoreWidget"
 
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: kind, provider: GrimProvider()) { entry in
-            GrimWidgetEntryView(entry: entry)
+        StaticConfiguration(kind: kind, provider: LiveMoreProvider()) { entry in
+            LiveMoreWidgetEntryView(entry: entry)
         }
-        .configurationDisplayName("grim")
+        .configurationDisplayName("more to life")
         .description("how many days do you have left?")
         .supportedFamilies([
             .systemSmall,
@@ -74,9 +77,60 @@ struct GrimWidget: Widget {
     }
 }
 
-struct GrimWidgetEntryView: View {
+struct LiveMoreContextWidget: Widget {
+    let kind: String = "LiveMoreContextWidget"
+
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: LiveMoreProvider()) { entry in
+            LiveMoreContextWidgetEntryView(entry: entry)
+        }
+        .configurationDisplayName("right now")
+        .description("today's suggestion from more to life.")
+        .supportedFamilies([.systemSmall, .systemMedium, .accessoryRectangular])
+    }
+}
+
+struct LiveMoreContextWidgetEntryView: View {
     @Environment(\.widgetFamily) var family
-    var entry: GrimEntry
+    var entry: LiveMoreEntry
+
+    private var isLockScreen: Bool { family == .accessoryRectangular }
+
+    var body: some View {
+        if isLockScreen {
+            if #available(iOS 17, *) {
+                content.containerBackground(.clear, for: .widget)
+            } else {
+                content
+            }
+        } else {
+            if #available(iOS 17, *) {
+                content.containerBackground(Color(hex: "#0a0a0a"), for: .widget)
+            } else {
+                ZStack {
+                    Color(hex: "#0a0a0a")
+                    content
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var content: some View {
+        switch family {
+        case .systemMedium:
+            ContextMediumWidgetView(entry: entry)
+        case .accessoryRectangular:
+            ContextLockScreenRectangularView(entry: entry)
+        default:
+            ContextSmallWidgetView(entry: entry)
+        }
+    }
+}
+
+struct LiveMoreWidgetEntryView: View {
+    @Environment(\.widgetFamily) var family
+    var entry: LiveMoreEntry
 
     var body: some View {
         if #available(iOS 17, *) {

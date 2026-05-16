@@ -8,7 +8,7 @@ struct CoordinatorAgent {
     ) {
         guard !candidates.isEmpty else { completion(nil); return }
 
-        let system = "You are the decision layer of a life-awareness app called grim. You receive suggestions from specialist agents plus a log of what the user was told recently. Pick the most timely, impactful suggestion they haven't heard recently. Return ONLY the suggestion text — max 12 words, lowercase, no punctuation at end, no explanation."
+        let system = "You are the decision layer of a life-awareness app called more to life. You receive suggestions from specialist agents plus a log of what the user was told recently. Pick the most timely, impactful suggestion they haven't heard recently. Return ONLY the suggestion text — max 12 words, lowercase, no punctuation at end, no explanation."
 
         var userParts: [String] = []
 

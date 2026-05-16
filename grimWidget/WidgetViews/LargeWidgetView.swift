@@ -2,7 +2,7 @@ import SwiftUI
 import WidgetKit
 
 struct LargeWidgetView: View {
-    var entry: GrimEntry
+    var entry: LiveMoreEntry
 
     private let cols = Array(repeating: GridItem(.fixed(5), spacing: 2), count: 52)
 

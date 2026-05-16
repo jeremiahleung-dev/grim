@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    @EnvironmentObject private var themeManager: ThemeManager
     @StateObject private var userData = UserData.shared
     @State private var displayUnit: DisplayUnit = .days
     @State private var showSettings = false
@@ -69,12 +70,10 @@ struct ContentView: View {
                 withAnimation(.easeIn(duration: 0.6)) { appeared = true }
             }
 
-            // Top chrome — header + week strip
+            // Top chrome — mark + label + week strip
             VStack(spacing: 0) {
                 HStack {
-                    Text("grim")
-                        .font(Theme.fontLabel)
-                        .foregroundColor(Theme.muted)
+                    WeekMark(size: 40)
                     Spacer()
                     Button { showSettings = true } label: {
                         Image(systemName: "ellipsis")
@@ -91,7 +90,7 @@ struct ContentView: View {
                 Spacer()
             }
 
-            // Bottom chrome — daily prompt + swipe hint
+            // Bottom chrome — today prompt card + swipe hint
             VStack(spacing: 0) {
                 Spacer()
 
@@ -99,12 +98,6 @@ struct ContentView: View {
                     .padding(.horizontal, 28)
                     .padding(.bottom, 12)
                     .offset(y: -100)
-
-                if !userData.lifeItems.isEmpty || !userData.dailyPromptText.isNilOrEmpty {
-                    dailyPromptHint
-                        .padding(.horizontal, 28)
-                        .padding(.bottom, 24)
-                }
 
                 Button { showLifeList = true } label: {
                     HStack(spacing: 6) {
@@ -134,34 +127,6 @@ struct ContentView: View {
             set: { if !$0 { selectedDay = nil } }
         )) {
             if let day = selectedDay { DayDetailView(date: day) }
-        }
-    }
-
-    // MARK: - Daily prompt hint
-
-    private var dailyPromptHint: some View {
-        Button { showLifeList = true } label: {
-            VStack(alignment: .leading, spacing: 6) {
-                Text("today")
-                    .font(Theme.fontLabel)
-                    .foregroundColor(Theme.muted)
-
-                if let prompt = userData.dailyPromptText, !prompt.isEmpty {
-                    Text(prompt)
-                        .font(Theme.fontLabel)
-                        .foregroundColor(Theme.ink.opacity(0.8))
-                        .lineSpacing(4)
-                        .lineLimit(2)
-                        .multilineTextAlignment(.leading)
-                } else {
-                    Text("tap to add things you want to do with your days →")
-                        .font(Theme.fontLabel)
-                        .foregroundColor(Theme.muted.opacity(0.5))
-                }
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(18)
-            .overlay(Rectangle().stroke(Theme.border, lineWidth: 1))
         }
     }
 
@@ -210,8 +175,4 @@ struct ContentView: View {
     private var todayLabel: String {
         Date().formatted(.dateTime.weekday(.wide).month(.wide).day())
     }
-}
-
-private extension Optional where Wrapped == String {
-    var isNilOrEmpty: Bool { self?.isEmpty ?? true }
 }

@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct DayDetailView: View {
+    @EnvironmentObject private var themeManager: ThemeManager
     @StateObject private var userData = UserData.shared
     @Environment(\.dismiss) private var dismiss
     let date: Date

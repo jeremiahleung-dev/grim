@@ -1,7 +1,7 @@
 import WidgetKit
 import Foundation
 
-struct GrimEntry: TimelineEntry {
+struct LiveMoreEntry: TimelineEntry {
     let date: Date
     let daysRemaining: Int
     let weeksRemaining: Int

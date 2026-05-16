@@ -2,8 +2,9 @@ import SwiftUI
 import ActivityKit
 import WidgetKit
 
-struct GrimLockScreenView: View {
-    let context: ActivityViewContext<GrimActivityAttributes>
+@available(iOS 16.1, *)
+struct LiveMoreLockScreenView: View {
+    let context: ActivityViewContext<LiveMoreActivityAttributes>
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -46,10 +47,11 @@ struct GrimLockScreenView: View {
     }
 }
 
-struct GrimLiveActivity: Widget {
+@available(iOS 16.1, *)
+struct LiveMoreLiveActivity: Widget {
     var body: some WidgetConfiguration {
-        ActivityConfiguration(for: GrimActivityAttributes.self) { context in
-            GrimLockScreenView(context: context)
+        ActivityConfiguration(for: LiveMoreActivityAttributes.self) { context in
+            LiveMoreLockScreenView(context: context)
         } dynamicIsland: { context in
             DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {

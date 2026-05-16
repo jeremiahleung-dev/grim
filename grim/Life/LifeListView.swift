@@ -1,10 +1,11 @@
 import SwiftUI
 
 struct LifeListView: View {
+    @EnvironmentObject private var themeManager: ThemeManager
     @StateObject private var userData = UserData.shared
     @Environment(\.dismiss) private var dismiss
     @State private var newItemText = ""
-    @State private var isGenerating = false
+    @State private var isRefreshing = false
     @FocusState private var inputFocused: Bool
 
     var body: some View {
@@ -32,15 +33,51 @@ struct LifeListView: View {
                         }
                     }
                     .padding(.horizontal, 28)
-                    .padding(.bottom, 32)
+                    .padding(.bottom, 24)
                 }
                 .frame(maxWidth: .infinity)
 
-                // Daily prompt
+                // Today card — shown when list is non-empty
                 if !userData.lifeItems.isEmpty {
-                    dailyPromptSection
-                        .padding(.horizontal, 28)
-                        .padding(.bottom, 32)
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("today")
+                            .font(Theme.fontLabel)
+                            .foregroundColor(Theme.muted)
+
+                        if isRefreshing {
+                            HStack(spacing: 8) {
+                                ProgressView().tint(Theme.muted).scaleEffect(0.7)
+                                Text("thinking...")
+                                    .font(Theme.fontLabel)
+                                    .foregroundColor(Theme.muted)
+                            }
+                        } else if let briefing = userData.contextBriefing, !briefing.isEmpty {
+                            Text(briefing)
+                                .font(Theme.fontLabel)
+                                .foregroundColor(Theme.ink.opacity(0.8))
+                                .lineSpacing(4)
+                                .lineLimit(2)
+                                .multilineTextAlignment(.leading)
+
+                            Button { refreshPrompt() } label: {
+                                Text("refresh →")
+                                    .font(Theme.fontLabel)
+                                    .foregroundColor(Theme.muted.opacity(0.5))
+                            }
+                            .padding(.top, 2)
+                        } else {
+                            Button { refreshPrompt() } label: {
+                                Text("refresh →")
+                                    .font(Theme.fontLabel)
+                                    .foregroundColor(Theme.muted.opacity(0.5))
+                            }
+                        }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(20)
+                    .overlay(Rectangle().stroke(Theme.border, lineWidth: 1))
+                    .padding(.horizontal, 28)
+                    .padding(.bottom, 24)
                 }
 
                 // List
@@ -76,7 +113,7 @@ struct LifeListView: View {
                                 Button(role: .destructive) {
                                     withAnimation {
                                         userData.removeLifeItem(item)
-                                        refreshPromptIfNeeded()
+                                        userData.contextBriefing = nil
                                     }
                                 } label: {
                                     Label("Delete", systemImage: "trash")
@@ -113,48 +150,6 @@ struct LifeListView: View {
                 .padding(.bottom, 48)
             }
         }
-        .onAppear { refreshPromptIfNeeded() }
-    }
-
-    // MARK: - Daily prompt
-
-    private var dailyPromptSection: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text("today")
-                .font(Theme.fontLabel)
-                .foregroundColor(Theme.muted)
-
-            if isGenerating {
-                HStack(spacing: 8) {
-                    ProgressView()
-                        .tint(Theme.muted)
-                        .scaleEffect(0.7)
-                    Text("thinking...")
-                        .font(Theme.fontLabel)
-                        .foregroundColor(Theme.muted)
-                }
-            } else if let prompt = userData.dailyPromptText, !prompt.isEmpty {
-                Text(prompt)
-                    .font(Theme.fontLabel)
-                    .foregroundColor(Theme.ink)
-                    .lineSpacing(5)
-
-                Button {
-                    regeneratePrompt()
-                } label: {
-                    Text("refresh →")
-                        .font(Theme.fontLabel)
-                        .foregroundColor(Theme.muted.opacity(0.5))
-                }
-                .padding(.top, 2)
-            } else {
-                Text("no suggestion yet — add items to your list.")
-                    .font(Theme.fontLabel)
-                    .foregroundColor(Theme.muted)
-            }
-        }
-        .padding(20)
-        .overlay(Rectangle().stroke(Theme.border, lineWidth: 1))
     }
 
     // MARK: - Actions
@@ -167,39 +162,18 @@ struct LifeListView: View {
         withAnimation { userData.addLifeItem(text) }
         newItemText = ""
         inputFocused = false
-        regeneratePrompt()
+        refreshPrompt()
+    }
+
+    private func refreshPrompt() {
+        guard !isRefreshing else { return }
+        isRefreshing = true
+        AgentOrchestrator.shared.run(userData: userData) {
+            isRefreshing = false
+        }
     }
 
     private func daysSinceAdded(_ item: LifeItem) -> Int {
         Calendar.current.dateComponents([.day], from: item.createdAt, to: Date()).day ?? 0
-    }
-
-    private func refreshPromptIfNeeded() {
-        guard !userData.lifeItems.isEmpty else { return }
-
-        let today = Calendar.current.startOfDay(for: Date())
-        if let cached = userData.dailyPromptDate,
-           Calendar.current.isDate(cached, inSameDayAs: today),
-           let text = userData.dailyPromptText, !text.isEmpty {
-            return
-        }
-        regeneratePrompt()
-    }
-
-    private func regeneratePrompt() {
-        guard !userData.lifeItems.isEmpty else { return }
-        isGenerating = true
-        AnthropicService.generateDailyPrompt(
-            items: userData.lifeItems,
-            dob: userData.dateOfBirth,
-            lifeExpectancy: userData.lifeExpectancy
-        ) { result in
-            isGenerating = false
-            if let result {
-                userData.dailyPromptText = result
-                userData.dailyPromptDate = Date()
-                userData.save()
-            }
-        }
     }
 }
